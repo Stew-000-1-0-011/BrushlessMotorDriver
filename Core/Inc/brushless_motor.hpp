@@ -30,13 +30,23 @@ namespace Chibarobo2022
 		bool step_out{false};
 
 	public:
-		BrushlessMotor(TIM_TypeDef *const encoder_timer, volatile u32 *const pwm_timer_ccr, const u32 pwm_timer_arr, const float rad_per_count, const float max_velocity, const float min_velocity) noexcept:
+		BrushlessMotor
+		(
+			TIM_TypeDef *const encoder_timer,
+			volatile u32 *const pwm_timer_ccr,
+			const u32 pwm_timer_arr,
+			const float rad_per_count,
+			const float max_velocity,
+			const float min_velocity,
+			const CRSLib::PidController<float>& pid_velocity
+		) noexcept:
 			encoder_timer{encoder_timer},
 			pwm_timer_ccr{pwm_timer_ccr},
 			pwm_timer_arr{pwm_timer_arr},
 			rad_per_count{rad_per_count},
 			max_velocity{max_velocity},
-			min_velocity{min_velocity}
+			min_velocity{min_velocity},
+			pid_velocity{pid_velocity}
 		{}
 
 		void update_from_encoder(const float delta_time) noexcept
