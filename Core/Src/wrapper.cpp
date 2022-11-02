@@ -11,7 +11,7 @@ using namespace RM0390;
 
 using namespace Chibarobo2022;
 
-void stew_wrapper(CAN_HandleTypeDef *const hcan)
+void stew_wrapper(CAN_HandleTypeDef *const hcan, TIM_HandleTypeDef *const htim)
 {
 	CanManager can_manager{hcan};
 
@@ -23,7 +23,7 @@ void stew_wrapper(CAN_HandleTypeDef *const hcan)
 		{
 			{
 				.id = /*TODO*/0,
-				.mask = /*TODO*/0
+				.mask = /*TODO*/FrameFeature<FilterWidth::bit32>{1, 0, false, false}
 			}
 		},
 		.fifo = /*TODO*/FifoIndex::fifo0
@@ -33,7 +33,7 @@ void stew_wrapper(CAN_HandleTypeDef *const hcan)
 
 	HAL_CAN_Start(hcan);
 
-	BrushlessMotor bldc1{/*TODO*/nullptr, nullptr, 0, 0, 0, 0, PidController<float>{0, 0, 0}, 0, 0};
+	BrushlessMotor bldc1{&htim->Instance.CCR/*x*/, htim->Instance.ARR, 1, 2, 100, -100, CRSLib::PidController<float>{1, 2, 3, 9}, 0.1};
 
 	u32 previous_tick = HAL_GetTick();
 	while(true)
